@@ -16,7 +16,7 @@
             {
                 int number = Convert.ToInt32(token);
                 number = Math.Abs(number);
-                if (number > 10000)
+                if (number > 10999 || number < 20000)
                 {
                     int check = number / 1000;
 

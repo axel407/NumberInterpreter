@@ -16,14 +16,20 @@
             {
                 int number = Convert.ToInt32(token);
                 number = Math.Abs(number);
-                if (number < 11 || number > 19)
+                int check = number % 100;
+                if (check < 11 || check > 19)
                 {
                     await _next.Invoke(context);
                 }
                 else
                 {
+                    string? result = string.Empty;
+                    if (number > 100)
+                    {
+                        result = context.Session.GetString("number");
+                    }
                     string[] Numbers = { "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen" };
-                    await context.Response.WriteAsync("Your number is " + Numbers[number - 11]);
+                    await context.Response.WriteAsync("Your number is " + result + " " + Numbers[check - 11]);
                 }
             }
             catch (Exception)

@@ -16,13 +16,10 @@
             {
                 int number = Convert.ToInt32(token);
                 number = Math.Abs(number);
-                if (number < 20)
+                int check = number % 100;
+                if(check < 20)
                 {
                     await _next.Invoke(context);
-                }
-                else if(number > 100)
-                {
-                    await context.Response.WriteAsync("Number greater than one hundred");
                 }
                 else if (number == 100)
                 {
@@ -30,10 +27,23 @@
                 }
                 else
                 {
-                    number /= 10;
+                    string? result = string.Empty;
+                    if (number > 100)
+                    {
+                        result = context.Session.GetString("number");
+                        number = (number % 100) / 10;
+                    }
+                    else
+                        number /= 10;
+
                     string[] Numbers = { "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety" };
-                    context.Session.SetString("number", Numbers[number - 2]);
-                    await _next.Invoke(context);
+                    if (number > 0)
+                    {
+                        context.Session.SetString("number", result + " " + Numbers[number - 2]);
+                        await _next.Invoke(context);
+                    }
+                    else
+                        await _next.Invoke(context);
                 }              
             }
             catch (Exception)
